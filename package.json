@@ -1,0 +1,19 @@
+{
+  "name": "chatterupproject",
+  "version": "1.0.0",
+  "description": "ChatterUp project is to create an interactive real-time chat application, facilitating seamless communication and interaction between users. This application will be built using Node.js, ExpressJS, Socket.io, and MongoDB to provide a robust and engaging chat experience.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Srikanth",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.1",
+    "mongoose": "^8.2.3",
+    "nodemon": "^3.1.0",
+    "socket.io": "^4.7.5"
+  }
+}
