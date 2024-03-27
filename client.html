@@ -4,17 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <title>Chat App</title>
 </head>
 
 <body>
+
+    <div class="container">
+        
+    </div>
+
+    <div id = "welcome_message">
+
+    </div>
 
     <div id="chat-container">
         <div id="message-list">
             <!-- list will contain messages -->
         </div>
         <input type="text" id="message-input">
-        <button id="send-message">Send</button>
+        <button id="send-message" class="btn btn-success">Send</button>
+    </div>
+
+    <div id="userList-container">
+        <div id = "usersOnlineCount"> connected users : <span id="connectedUserCount"></span></div>
+        <div id="usersOnline">
+            <!-- list with online users-->
+        </div>
     </div>
 
     <script src="http://localhost:3200/socket.io/socket.io.js"></script>
@@ -30,6 +47,10 @@
         const messageInput = document.getElementById("message-input");
         const messageList = document.getElementById("message-list");
         const sendButton = document.getElementById("send-message");
+        const userListContainer = document.getElementById("userList-container");
+        const userCount = document.getElementById("usersOnlineCount");
+        const userOnline = document.getElementById("usersOnline");
+        const welcomeMessage = document.getElementById("welcome_message");
 
         socket.on('load_messages', (messages)=>{
             messages.forEach(message => {
@@ -56,6 +77,62 @@
             messageElement.innerText = userMessage.username + ":" + userMessage.message;
             messageList.appendChild(messageElement);
             messageInput.value = "";
+        })
+
+        // socket.on("connectedUsers", (userList) => {
+        //     Object.keys(userList).forEach((key) => {
+        //         const userOnline_userList = document.createElement("div");
+        //         //console.log(key);
+        //         //console.log("userList : ", userList);
+        //         userOnline_userList.innerText = userList[key].username;
+        //         userOnline.appendChild(userOnline_userList);
+        //     });
+        // });
+
+
+        // socket.on("loggedInUser", (user) => {
+        //     const userOnline_userList = document.createElement("div");
+        //     //console.log(key);
+        //     //console.log("userList : ", userList);
+        //     userOnline_userList.innerText = user.username;
+        //     userOnline.appendChild(userOnline_userList);
+        // })
+
+        socket.on("connectedUsers", (userList) => {
+            const connectedUserCount = document.getElementById("connectedUserCount");
+            connectedUserCount.innerText = Object.keys(userList).length.toString();
+            
+            userOnline.innerHTML = "";
+            Object.keys(userList).forEach((key) => {
+                const userOnline_userList = document.createElement("div");
+                userOnline_userList.innerText = userList[key].username;
+                userOnline.appendChild(userOnline_userList);
+            });
+        });
+
+        socket.on("loggedInUser", (user) => {
+            const userOnline_userList = document.createElement("div");
+            userOnline_userList.innerText = user.username;
+            userOnline.appendChild(userOnline_userList);
+
+            // Update the user count
+            const connectedUserCount = document.getElementById("connectedUserCount");
+            connectedUserCount.innerText = (parseInt(connectedUserCount.innerText) + 1).toString();
+        });
+
+        socket.on("disconnectUser", (user) => {
+            const userOnline_userList = document.createElement("div");
+            userOnline_userList.innerText = user.username;
+            userOnline.removeChild(userOnline_userList);
+
+            // Update the user count
+            const connectedUserCount = document.getElementById("connectedUserCount");
+            connectedUserCount.innerText = (parseInt(connectedUserCount.innerText) - 1).toString();
+        });
+
+        socket.on("welcome", (username) =>{
+            const welMsg = document.createElement("div");
+            welcomeMessage.innerText= "welcome " +username;
         })
 
 
