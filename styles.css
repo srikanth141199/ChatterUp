@@ -69,6 +69,7 @@ body{
     border: 1px solid #ccc;
     border-radius: 3px;
     cursor: pointer;
+    color: #048b0499;
 }
 
 .left-message {
@@ -123,4 +124,8 @@ body{
     align-self: flex-start;
     font-size: 0.7em;
     color: #ccc;
+}
+
+#usersOnlineCount{
+    color: green;
 }
