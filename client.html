@@ -48,54 +48,15 @@
         const userOnline = document.getElementById("usersOnline");
         const welcomeMessage = document.getElementById("welcome_message");
 
-        // socket.on('load_messages', (messages)=>{
-        //     messages.forEach(message => {
-        //         const messageElement = document.createElement("div");
-        //         messageElement.innerText = new Date(message.timestamp).toDateString() + "-" + message.username + ":" + message.message;
-        //         messageList.appendChild(messageElement);
-                    
-        //     });
-        // })
-
-        // sendButton.addEventListener('click', () => {
-        //     const message = messageInput.value;
-        //     if(message){
-        //         socket.emit('new_message', message);
-        //         const messageElement = document.createElement('div');
-        //         messageElement.innerText = username + ":" + message;
-        //         messageList.appendChild(messageElement);
-        //         messageInput.value = "";
-        //     }
-        // })
-
-        // socket.on('load_messages', (messages) => {
-        //     messages.forEach((message) => {
-        //         const messageElement = document.createElement('div');
-        //         const messageContent = new Date(message.timestamp).toDateString() + '-' + message.username + ':' + message.message;
-        //         messageElement.innerText = messageContent;
-        //         messageElement.classList.add('left-message'); // Add class for left-aligned message
-        //         messageList.appendChild(messageElement);
-        //     });
-        // });
-
-        // sendButton.addEventListener('click', () => {
-        //     const message = messageInput.value;
-        //     if (message) {
-        //         socket.emit('new_message', message);
-        //         const messageElement = document.createElement('div');
-        //         messageElement.innerText = username + ':' + message;
-        //         messageElement.classList.add('right-message'); // Add class for right-aligned message
-        //         messageList.appendChild(messageElement);
-        //         messageInput.value = '';
-        //     }
-        // });
+        const images = ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg'];
 
         socket.on('load_messages', (messages) => {
             messages.forEach((message) => {
                 const messageElement = document.createElement('div');
-                messageElement.classList.add('message-container', 'left-message'); // Add classes for message container and left alignment
+                messageElement.classList.add('message-container', 'left-message');
+                const randomImage = images[Math.floor(Math.random() * images.length)];
                 const messageContent = `
-                    <div class="message-username">${message.username}</div>
+                    <div class="message-username">${message.username}<img src="images/${randomImage}" class="avatar" /></div>
                     <div class="message-text">${message.message}</div>
                     <div class="message-time">${new Date(message.timestamp).toLocaleTimeString()}</div>
                 `;
@@ -104,14 +65,22 @@
             });
         });
 
+        
+
         sendButton.addEventListener('click', () => {
             const message = messageInput.value;
             if (message) {
                 socket.emit('new_message', message);
                 const messageElement = document.createElement('div');
-                messageElement.classList.add('message-container', 'right-message'); // Add classes for message container and right alignment
+                messageElement.classList.add('message-container', 'right-message'); 
+                const randomImage = images[Math.floor(Math.random() * images.length)];
+                
                 const messageContent = `
-                    <div class="message-username-right">${username}</div>
+                    <div class="message-username-right">
+                        <img src="images/${randomImage}" class="avatar" />
+                        ${username}
+                        
+                    </div>
                     <div class="message-text">${message}</div>
                     <div class="message-time-right">${new Date().toLocaleTimeString()}</div>
                 `;
@@ -123,6 +92,7 @@
 
 
 
+
         socket.on("broadcast_message", (userMessage) => {
             const messageElement = document.createElement("div");
             messageElement.innerText = userMessage.username + ":" + userMessage.message;
@@ -130,24 +100,6 @@
             messageInput.value = "";
         })
 
-        // socket.on("connectedUsers", (userList) => {
-        //     Object.keys(userList).forEach((key) => {
-        //         const userOnline_userList = document.createElement("div");
-        //         //console.log(key);
-        //         //console.log("userList : ", userList);
-        //         userOnline_userList.innerText = userList[key].username;
-        //         userOnline.appendChild(userOnline_userList);
-        //     });
-        // });
-
-
-        // socket.on("loggedInUser", (user) => {
-        //     const userOnline_userList = document.createElement("div");
-        //     //console.log(key);
-        //     //console.log("userList : ", userList);
-        //     userOnline_userList.innerText = user.username;
-        //     userOnline.appendChild(userOnline_userList);
-        // })
 
         socket.on("connectedUsers", (userList) => {
             const connectedUserCount = document.getElementById("connectedUserCount");
