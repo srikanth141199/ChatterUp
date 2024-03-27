@@ -13,24 +13,20 @@
 
     <div class="container">
         
-    </div>
-
-    <div id = "welcome_message">
-
-    </div>
-
-    <div id="chat-container">
-        <div id="message-list">
-            <!-- list will contain messages -->
+        <div id="chat-container">
+            <div id = "welcome_message"></div>
+            <div id="message-list">
+                <!-- list will contain messages -->
+            </div>
+            <input type="text" id="message-input">
+            <button id="send-message" class="btn btn-success">Send</button>
         </div>
-        <input type="text" id="message-input">
-        <button id="send-message" class="btn btn-success">Send</button>
-    </div>
 
-    <div id="userList-container">
-        <div id = "usersOnlineCount"> connected users : <span id="connectedUserCount"></span></div>
-        <div id="usersOnline">
-            <!-- list with online users-->
+        <div id="userList-container">
+            <div id="usersOnlineCount">Connected users: <span id="connectedUserCount"></span></div>
+            <div id="usersOnline">
+                <!-- list with online users-->
+            </div>
         </div>
     </div>
 
@@ -52,25 +48,80 @@
         const userOnline = document.getElementById("usersOnline");
         const welcomeMessage = document.getElementById("welcome_message");
 
-        socket.on('load_messages', (messages)=>{
-            messages.forEach(message => {
-                const messageElement = document.createElement("div");
-                messageElement.innerText = new Date(message.timestamp).toDateString() + "-" + message.username + ":" + message.message;
-                messageList.appendChild(messageElement);
+        // socket.on('load_messages', (messages)=>{
+        //     messages.forEach(message => {
+        //         const messageElement = document.createElement("div");
+        //         messageElement.innerText = new Date(message.timestamp).toDateString() + "-" + message.username + ":" + message.message;
+        //         messageList.appendChild(messageElement);
                     
+        //     });
+        // })
+
+        // sendButton.addEventListener('click', () => {
+        //     const message = messageInput.value;
+        //     if(message){
+        //         socket.emit('new_message', message);
+        //         const messageElement = document.createElement('div');
+        //         messageElement.innerText = username + ":" + message;
+        //         messageList.appendChild(messageElement);
+        //         messageInput.value = "";
+        //     }
+        // })
+
+        // socket.on('load_messages', (messages) => {
+        //     messages.forEach((message) => {
+        //         const messageElement = document.createElement('div');
+        //         const messageContent = new Date(message.timestamp).toDateString() + '-' + message.username + ':' + message.message;
+        //         messageElement.innerText = messageContent;
+        //         messageElement.classList.add('left-message'); // Add class for left-aligned message
+        //         messageList.appendChild(messageElement);
+        //     });
+        // });
+
+        // sendButton.addEventListener('click', () => {
+        //     const message = messageInput.value;
+        //     if (message) {
+        //         socket.emit('new_message', message);
+        //         const messageElement = document.createElement('div');
+        //         messageElement.innerText = username + ':' + message;
+        //         messageElement.classList.add('right-message'); // Add class for right-aligned message
+        //         messageList.appendChild(messageElement);
+        //         messageInput.value = '';
+        //     }
+        // });
+
+        socket.on('load_messages', (messages) => {
+            messages.forEach((message) => {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message-container', 'left-message'); // Add classes for message container and left alignment
+                const messageContent = `
+                    <div class="message-username">${message.username}</div>
+                    <div class="message-text">${message.message}</div>
+                    <div class="message-time">${new Date(message.timestamp).toLocaleTimeString()}</div>
+                `;
+                messageElement.innerHTML = messageContent;
+                messageList.appendChild(messageElement);
             });
-        })
+        });
 
         sendButton.addEventListener('click', () => {
             const message = messageInput.value;
-            if(message){
+            if (message) {
                 socket.emit('new_message', message);
                 const messageElement = document.createElement('div');
-                messageElement.innerText = username + ":" + message;
+                messageElement.classList.add('message-container', 'right-message'); // Add classes for message container and right alignment
+                const messageContent = `
+                    <div class="message-username-right">${username}</div>
+                    <div class="message-text">${message}</div>
+                    <div class="message-time-right">${new Date().toLocaleTimeString()}</div>
+                `;
+                messageElement.innerHTML = messageContent;
                 messageList.appendChild(messageElement);
-                messageInput.value = "";
+                messageInput.value = '';
             }
-        })
+        });
+
+
 
         socket.on("broadcast_message", (userMessage) => {
             const messageElement = document.createElement("div");
