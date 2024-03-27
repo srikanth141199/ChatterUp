@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
+let url = "mongodb+srv://kolleparasrikanth:Srikanth5359$@ecomdb.ndaljpt.mongodb.net/chatterupdb"
 export const connect = async () => {
-    await mongoose.connect("mongodb://127.0.0.1:27017/chatterUpApp")
+    await mongoose.connect(url)
     console.log("DB is connected");
 }
